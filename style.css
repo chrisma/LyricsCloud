@@ -1,0 +1,12 @@
+footer {
+	font-family: Open Sans, Verdana, sans-serif;
+	position: absolute;
+	bottom: 2px;
+	padding-left: 2px;
+}
+
+svg#lyriccloud {
+	margin-right: auto;
+	margin-left: auto;
+	display: block;
+}

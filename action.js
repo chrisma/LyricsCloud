@@ -16,13 +16,19 @@ $( document ).ready(function() {
 		"and xpath='//div[@class=%22lyricbox%22]'" +
 		"&format=json&callback=?"
 
-	//Fetch lyrics from LyricsWiki and make D3 process them.
-	$.getJSON( url, function( data ) {
-		var wordObjects = processLyricJSON(data);
-		setupTagCloud(wordObjects);
-	}).fail( function(jqxhr, textStatus, error){
-		console.log("ERROR ", jqxhr, textStatus, error);
-	});
+	//Check if the lyrics are in static cache
+	var id = artist.toLowerCase() + '-' + song.toLowerCase();
+	if (id in cache) {
+		console.log("Lyrics found in cache: ", id);
+		setupTagCloud(cache[id]);
+	} else {
+		//Fetch lyrics from LyricsWiki
+		$.getJSON( url, function( data ) {
+			setupTagCloud(processLyricJSON(data));
+		}).fail( function(jqxhr, textStatus, error){
+			console.log("ERROR ", jqxhr, textStatus, error);
+		});
+	}
 
 	function processLyricJSON(json) {
 		var wordCounts = {};
@@ -41,6 +47,7 @@ $( document ).ready(function() {
 		$.each(wordCounts, function(key, value){
 			result.push({text:key, size:value});
 		});
+		console.log(JSON.stringify(result));
 		return result
 	}
 

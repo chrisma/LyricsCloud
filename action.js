@@ -24,7 +24,13 @@ $( document ).ready(function() {
 	} else {
 		//Fetch lyrics from LyricsWiki
 		$.getJSON( url, function( data ) {
-			setupTagCloud(processLyricJSON(data));
+			try {
+				var root = json.query.results.div.p;
+			} catch(e) {
+				console.log('ERROR retrieving lyrics!');
+				return
+			}
+			setupTagCloud(processLyricJSON(root));
 		}).fail( function(jqxhr, textStatus, error){
 			console.log("ERROR ", jqxhr, textStatus, error);
 		});
@@ -33,9 +39,8 @@ $( document ).ready(function() {
 	function processLyricJSON(json) {
 		var wordCounts = {};
 		var result = [];
-		var root = json.query.results.div.p;
-		var lyrics = root.content;
-		if (root.em) lyrics += root.em.join(' ');
+		var lyrics = json.content;
+		if (json.em) lyrics += json.em.join(' ');
 		lyrics = lyrics.replace(/\r?\n|\r/g, ' '); // get rid of linebreaks
 		lyrics = lyrics.replace(/[\[\]|&;$%@<>()+,.!?-]/g, ' '); // get rid of unwanted characters
 		lyrics = lyrics.replace(/ +/g, ' '); // get rid of multiple spaces

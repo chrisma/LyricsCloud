@@ -1,8 +1,4 @@
 $( document ).ready(function() {
-	// var artist = "Michael_Jackson";
-	var artist = "Metallica";
-	// var song = "Bad";
-	var song = "Master_of_puppets";
 	var maxLength = 30;
 	//from https://github.com/jdf/cue.language
 	var stopWords = /^(i|me|my|myself|we|us|our|ours|ourselves|you|your|yours|yourself|yourselves|he|him|his|himself|she|her|hers|herself|it|its|itself|they|them|their|theirs|themselves|what|which|who|whom|whose|this|that|these|those|am|is|are|was|were|be|been|being|have|has|had|having|do|does|did|doing|will|would|should|can|could|ought|i'm|you're|he's|she's|it's|we're|they're|i've|you've|we've|they've|i'd|you'd|he'd|she'd|we'd|they'd|i'll|you'll|he'll|she'll|we'll|they'll|isn't|aren't|wasn't|weren't|hasn't|haven't|hadn't|doesn't|don't|didn't|won't|wouldn't|shan't|shouldn't|can't|cannot|couldn't|mustn't|let's|that's|who's|what's|here's|there's|when's|where's|why's|how's|a|an|the|and|but|if|or|because|as|until|while|of|at|by|for|with|about|against|between|into|through|during|before|after|above|below|to|from|up|upon|down|in|out|on|off|over|under|again|further|then|once|here|there|when|where|why|how|all|any|both|each|few|more|most|other|some|such|no|nor|not|only|own|same|so|than|too|very|say|says|said|shall)$/;
@@ -10,30 +6,38 @@ $( document ).ready(function() {
 	var fontSize = d3.scale.log().range([15, 105]);
 	var width = 960;
 	var height = 600;
-	var url = "https://query.yahooapis.com/v1/public/yql?q=" +
-		"select * from html where " +
-		"url='http://lyrics.wikia.com/" + artist + ":" + song + "?useskin=wikiamobile' " +
-		"and xpath='//div[@class=%22lyricbox%22]'" +
-		"&format=json&callback=?"
+
+	var URLhash = location.hash.replace('#', '');
+	var ArtistAndSong = URLhash || randomPropertyName(cache);
+
+	var lyricsURL = "http://lyrics.wikia.com/" + ArtistAndSong + "?useskin=wikiamobile"
+	var queryURL = "https://query.yahooapis.com/v1/public/yql?" +
+		"q=select * from html where url='" + lyricsURL + "' and " +
+		"xpath='//div[@class=%22lyricbox%22]'&" +
+		"format=json&callback=?"
 
 	//Check if the lyrics are in static cache
-	var id = artist.toLowerCase() + '-' + song.toLowerCase();
-	if (id in cache) {
-		console.log("Lyrics found in cache: ", id);
-		setupTagCloud(cache[id]);
+	if (ArtistAndSong in cache) {
+		console.log("Lyrics found in cache: ", ArtistAndSong);
+		setupTagCloud(cache[ArtistAndSong]);
 	} else {
 		//Fetch lyrics from LyricsWiki
-		$.getJSON( url, function( data ) {
+		$.getJSON( queryURL, function( data ) {
 			try {
-				var root = json.query.results.div.p;
-			} catch(e) {
-				console.log('ERROR retrieving lyrics!');
+				var root = data.query.results.div.p;
+			} catch(e) { //TypeError
+				console.log('ERROR retrieving lyrics:', lyricsURL);
 				return
 			}
 			setupTagCloud(processLyricJSON(root));
 		}).fail( function(jqxhr, textStatus, error){
 			console.log("ERROR ", jqxhr, textStatus, error);
 		});
+	}
+
+	function randomPropertyName(obj) {
+		var keys = Object.keys(obj)
+		return keys[ keys.length * Math.random() << 0];
 	}
 
 	function processLyricJSON(json) {
@@ -68,7 +72,7 @@ $( document ).ready(function() {
 	}
 
 	function draw(words, selector) {
-		d3.select("#lyriccloud")
+		d3.select("#lyricscloud")
 				.attr("width", width)
 				.attr("height", height)
 			.append("g")

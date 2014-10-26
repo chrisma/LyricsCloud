@@ -16,11 +16,36 @@ $( document ).ready(function() {
 		"xpath='//div[@class=%22lyricbox%22]'&" +
 		"format=json&callback=?"
 
-	//Check if the lyrics are in static cache
-	if (ArtistAndSong in cache) {
-		console.log("Lyrics found in cache: ", ArtistAndSong);
-		setupTagCloud(cache[ArtistAndSong]);
-	} else {
+	var split = ArtistAndSong.split(':');
+	$('#artist').val(split[0].replace(/_/g,' ').title(true));
+	$('#song').val(split[1].replace(/_/g,' ').title(true));
+
+	fetchAndDisplayLyrics(ArtistAndSong);
+
+	$("#artist, #song").keyup(function (e) {
+		if (e.keyCode == 13) { //Enter
+			var artistSong = $('#artist').val() + ':' + $('#song').val();
+			artistSong = artistSong.trim().replace(/ /g, '_').toLowerCase();
+			fetchAndDisplayLyrics(artistSong);
+		}
+	});
+
+	function randomPropertyName(obj) {
+		var keys = Object.keys(obj)
+		return keys[ keys.length * Math.random() << 0];
+	}
+
+	function capitalize(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+	function fetchAndDisplayLyrics(artistSong) {
+		//Check if the lyrics are in static cache
+		if (artistSong in cache) {
+			console.log("Lyrics found in cache: ", artistSong);
+			setupTagCloud(cache[artistSong]);
+			return
+		} 
 		//Fetch lyrics from LyricsWiki
 		$.getJSON( queryURL, function( data ) {
 			try {
@@ -35,10 +60,6 @@ $( document ).ready(function() {
 		});
 	}
 
-	function randomPropertyName(obj) {
-		var keys = Object.keys(obj)
-		return keys[ keys.length * Math.random() << 0];
-	}
 
 	function processLyricJSON(json) {
 		var wordCounts = {};

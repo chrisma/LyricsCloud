@@ -54,6 +54,7 @@ $( document ).ready(function() {
 	}
 
 	function fetchAndDisplayLyrics(artistSong) {
+		$('#error').hide();
 		//Check if the lyrics are in static cache
 		if (artistSong in cache) {
 			console.log("Lyrics found in cache: ", artistSong);
@@ -67,10 +68,12 @@ $( document ).ready(function() {
 			} catch(e) { //TypeError
 				console.log('ERROR retrieving lyrics:', lyricsURL);
 				console.log(queryURL);
+				$('#error').show();
 				return
 			}
 			setupTagCloud(processLyricJSON(root));
 		}).fail( function(jqxhr, textStatus, error){
+			$('#error').show();
 			console.log("ERROR ", jqxhr, textStatus, error);
 		});
 	}

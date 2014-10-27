@@ -11,24 +11,38 @@ $( document ).ready(function() {
 	var ArtistAndSong = URLhash || randomPropertyName(cache);
 
 	var lyricsURL = "http://lyrics.wikia.com/" + ArtistAndSong + "?useskin=wikiamobile"
+	lyricsURL = lyricsURL.replace("'",'');
 	var queryURL = "https://query.yahooapis.com/v1/public/yql?" +
 		"q=select * from html where url='" + lyricsURL + "' and " +
 		"xpath='//div[@class=%22lyricbox%22]'&" +
 		"format=json&callback=?"
 
 	var split = ArtistAndSong.split(':');
-	$('#artist').val(split[0].replace(/_/g,' ').title(true));
-	$('#song').val(split[1].replace(/_/g,' ').title(true));
+	$('#artist').val(split[0].replace(/_/g,' ').title());
+	$('#song').val(split[1].replace(/_/g,' ').title());
 
 	fetchAndDisplayLyrics(ArtistAndSong);
+
+	$(window).on('hashchange',function(){
+		window.location.reload();
+	});
 
 	$("#artist, #song").keyup(function (e) {
 		if (e.keyCode == 13) { //Enter
 			var artistSong = $('#artist').val() + ':' + $('#song').val();
 			artistSong = artistSong.trim().replace(/ /g, '_').toLowerCase();
-			fetchAndDisplayLyrics(artistSong);
+			window.location.hash = artistSong;
 		}
 	});
+
+	var focusedElement;
+	$(document).on('focus', 'input', function () {
+		if (focusedElement == $(this)) return;
+		focusedElement = $(this);
+		//Needed for Chrome
+		setTimeout(function () { focusedElement.select(); }, 10);
+	});
+	$(document).on('blur', 'input', function(){focusedElement = null;})
 
 	function randomPropertyName(obj) {
 		var keys = Object.keys(obj)
@@ -52,6 +66,7 @@ $( document ).ready(function() {
 				var root = data.query.results.div.p;
 			} catch(e) { //TypeError
 				console.log('ERROR retrieving lyrics:', lyricsURL);
+				console.log(queryURL);
 				return
 			}
 			setupTagCloud(processLyricJSON(root));

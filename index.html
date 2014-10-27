@@ -14,12 +14,16 @@
 		<script src="action.js"></script>
 	</head>
 	<body>
-		<div id="inputs">
-			<input type="text" placeholder="Artist" id="artist">
-			<input type="text" placeholder="Song" id="song">
-			<div id="suggestions">Examples: <a href="#AC/DC:hell's_bells">AC/DC&ndash;Hell's Bells</a>, <a href="#michael_jackson:bad">Michael Jackson&ndash;Bad</a>, <a href="#black_eyed_peas:my_humps">Black Eyed Peas&ndash;My Humps</a>, <a href="#metallica:master_of_puppets">Metallica&ndash;Master Of Puppets</a></div>
+		<div class="wrapper">
+			<div id="inputs">
+				<div id="spacer"></div>
+				<input type="text" placeholder="Artist" id="artist">
+				<input type="text" placeholder="Song" id="song">
+				<div id="suggestions">Examples: <a href="#AC/DC:hell's_bells">AC/DC&ndash;Hell's Bells</a>, <a href="#michael_jackson:bad">Michael Jackson&ndash;Bad</a>, <a href="#black_eyed_peas:my_humps">Black Eyed Peas&ndash;My Humps</a>, <a href="#metallica:master_of_puppets">Metallica&ndash;Master Of Puppets</a></div>
+			</div>
+			<svg id="lyricscloud"></svg>
+			<div class="push"></div>
 		</div>
-		<svg id="lyricscloud"></svg>
 		<footer>Built by <a href="https://twitter.com/chrisma0">@chrisma0</a> | Hosted on <a href="https://github.com/chrisma/LyricsCloud">Github</a></footer>
 	</body>
 </html>

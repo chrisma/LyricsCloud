@@ -1,11 +1,37 @@
+* {
+	margin: 0;
+}
+
+html, body {
+	height: 100%;
+}
+
+.wrapper {
+	min-height: 100%;
+	/* equal to footer height */
+	margin-bottom: -18px;
+}
+
+.wrapper:after {
+	content: "";
+	display: block;
+}
+
+footer, .wrapper:after {
+	height: 18px;
+}
+
 body {
 	font-family: Open Sans, Verdana, sans-serif;
 }
 
 div#inputs {
-	margin-top: 10px;
 	margin-bottom: 30px;
 	text-align: center;
+}
+
+div#spacer {
+	height: 10px;
 }
 
 input[type="text"] {
@@ -31,8 +57,3 @@ svg#lyricscloud {
 	display: block;
 }
 
-footer {
-	position: absolute;
-	bottom: 2px;
-	padding-left: 2px;
-}

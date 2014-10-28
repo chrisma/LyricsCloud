@@ -36,6 +36,7 @@ $( document ).ready(function() {
 	});
 
 	$("#download-svg").on("click", downloadSVG);
+	$("#download-png").on("click", downloadPNG);
 
 	var focusedElement;
 	$(document).on('focus', 'input', function () {
@@ -48,9 +49,14 @@ $( document ).ready(function() {
 
 	function downloadSVG() {
 		$("#lyricscloud").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
-		var svg = $("#svg-container").html();
+		var svg = $("#svg-container").html().trim();
 		var b64 = btoa(unescape(encodeURIComponent(svg)));
 		$(this).attr("href", "data:image/svg+xml;charset=utf-8;base64," + b64);
+	}
+
+	function downloadPNG() {
+		canvg($('#hidden-canvas')[0], $("#svg-container").html().trim());
+		$(this).attr("href", $('#hidden-canvas')[0].toDataURL("image/png"));
 	}
 
 	function randomPropertyName(obj) {

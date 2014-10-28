@@ -49,10 +49,6 @@ $( document ).ready(function() {
 		return keys[ keys.length * Math.random() << 0];
 	}
 
-	function capitalize(string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
-	}
-
 	function fetchAndDisplayLyrics(artistSong) {
 		$('#error').hide();
 		//Check if the lyrics are in static cache
@@ -68,11 +64,13 @@ $( document ).ready(function() {
 			} catch(e) { //TypeError
 				console.log('ERROR retrieving lyrics:', lyricsURL);
 				console.log(queryURL);
+				$('#loader').hide();
 				$('#error').show();
 				return
 			}
 			setupTagCloud(processLyricJSON(root));
 		}).fail( function(jqxhr, textStatus, error){
+			$('#loader').hide();
 			$('#error').show();
 			console.log("ERROR ", jqxhr, textStatus, error);
 		});
@@ -100,6 +98,7 @@ $( document ).ready(function() {
 	}
 
 	function setupTagCloud(wordObjects){
+		$('#loader').hide();
 		d3.layout.cloud()
 			.size([width, height])
 			.words(wordObjects)

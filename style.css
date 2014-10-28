@@ -4,6 +4,7 @@
 
 html, body {
 	height: 100%;
+	font-family: Open Sans, Verdana, sans-serif;
 }
 
 .wrapper {
@@ -19,10 +20,6 @@ html, body {
 
 footer, .wrapper:after {
 	height: 18px;
-}
-
-body {
-	font-family: Open Sans, Verdana, sans-serif;
 }
 
 div#inputs {
@@ -51,9 +48,26 @@ div#suggestions {
 	margin-top: 5px;
 }
 
-svg#lyricscloud {
+.centered {
 	margin-right: auto;
 	margin-left: auto;
 	display: block;
 }
 
+img#loader {
+	margin-top: 55px;
+}
+
+div#error {
+	margin-top: 40px;
+	width: 300px;
+	border: 1px solid;
+	padding: 15px;
+	color: #D8000C;
+	background-color: #FFBABA;
+	margin-right: auto;
+	margin-left: auto;
+	display: block;
+	border-radius: 5px;
+	display: none;
+}

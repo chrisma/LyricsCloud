@@ -35,6 +35,8 @@ $( document ).ready(function() {
 		}
 	});
 
+	$("#download-svg").on("click", downloadSVG);
+
 	var focusedElement;
 	$(document).on('focus', 'input', function () {
 		if (focusedElement == $(this)) return;
@@ -43,6 +45,13 @@ $( document ).ready(function() {
 		setTimeout(function () { focusedElement.select(); }, 10);
 	});
 	$(document).on('blur', 'input', function(){focusedElement = null;})
+
+	function downloadSVG() {
+		$("#lyricscloud").attr({ version: '1.1' , xmlns:"http://www.w3.org/2000/svg"});
+		var svg = $("#svg-container").html();
+		var b64 = btoa(unescape(encodeURIComponent(svg)));
+		$(this).attr("href", "data:image/svg+xml;charset=utf-8;base64," + b64);
+	}
 
 	function randomPropertyName(obj) {
 		var keys = Object.keys(obj)
